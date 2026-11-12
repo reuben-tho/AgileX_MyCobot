@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<robot name="limo_mycobot280">
+  <!--
+    Base-only model. description_builder.py appends the official MyCobot 280 M5
+    links/joints from mycobot_description and attaches g_base to limo_base_link.
+
+    Approximate LIMO envelope for visualization only. The arm mounting transform
+    is exposed as launch arguments; measure the real mounting plate before use.
+  -->
+  <link name="world" />
+
+  <link name="base_x_link" />
+  <link name="base_y_link" />
+  <link name="base_yaw_link" />
+
+  <joint name="base_x_joint" type="prismatic">
+    <parent link="world"/><child link="base_x_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/><axis xyz="1 0 0"/>
+    <limit lower="-2.0" upper="2.0" effort="1000" velocity="0.25"/>
+  </joint>
+  <joint name="base_y_joint" type="prismatic">
+    <parent link="base_x_link"/><child link="base_y_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/><axis xyz="0 1 0"/>
+    <limit lower="-2.0" upper="2.0" effort="1000" velocity="0.25"/>
+  </joint>
+  <joint name="base_yaw_joint" type="continuous">
+    <parent link="base_y_link"/><child link="base_yaw_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/><axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="limo_base_link">
+    <visual>
+      <origin xyz="0 0 0.135" rpy="0 0 0"/>
+      <geometry><box size="0.34 0.22 0.11"/></geometry>
+      <material name="limo_dark"><color rgba="0.12 0.14 0.16 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.135" rpy="0 0 0"/>
+      <geometry><box size="0.34 0.22 0.11"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="base_to_chassis" type="fixed">
+    <parent link="base_yaw_link"/><child link="limo_base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Four illustrative wheels; dimensions/locations are not a mechanical drawing. -->
+  <link name="limo_wheel_front_left">
+    <visual><origin xyz="0 0 0" rpy="1.5707963 0 0"/><geometry><cylinder radius="0.068" length="0.042"/></geometry><material name="rubber"><color rgba="0.035 0.035 0.04 1"/></material></visual>
+  </link>
+  <link name="limo_wheel_front_right">
+    <visual><origin xyz="0 0 0" rpy="1.5707963 0 0"/><geometry><cylinder radius="0.068" length="0.042"/></geometry><material name="rubber2"><color rgba="0.035 0.035 0.04 1"/></material></visual>
+  </link>
+  <link name="limo_wheel_rear_left">
+    <visual><origin xyz="0 0 0" rpy="1.5707963 0 0"/><geometry><cylinder radius="0.068" length="0.042"/></geometry><material name="rubber3"><color rgba="0.035 0.035 0.04 1"/></material></visual>
+  </link>
+  <link name="limo_wheel_rear_right">
+    <visual><origin xyz="0 0 0" rpy="1.5707963 0 0"/><geometry><cylinder radius="0.068" length="0.042"/></geometry><material name="rubber4"><color rgba="0.035 0.035 0.04 1"/></material></visual>
+  </link>
+
+  <joint name="wheel_front_left_fixed" type="fixed"><parent link="limo_base_link"/><child link="limo_wheel_front_left"/><origin xyz="0.105 0.125 0.068" rpy="0 0 0"/></joint>
+  <joint name="wheel_front_right_fixed" type="fixed"><parent link="limo_base_link"/><child link="limo_wheel_front_right"/><origin xyz="0.105 -0.125 0.068" rpy="0 0 0"/></joint>
+  <joint name="wheel_rear_left_fixed" type="fixed"><parent link="limo_base_link"/><child link="limo_wheel_rear_left"/><origin xyz="-0.105 0.125 0.068" rpy="0 0 0"/></joint>
+  <joint name="wheel_rear_right_fixed" type="fixed"><parent link="limo_base_link"/><child link="limo_wheel_rear_right"/><origin xyz="-0.105 -0.125 0.068" rpy="0 0 0"/></joint>
+
+  <!-- Simple top plate shown under the arm base. -->
+  <link name="limo_top_plate">
+    <visual><origin xyz="0 0 0"/><geometry><box size="0.20 0.18 0.012"/></geometry><material name="plate"><color rgba="0.55 0.57 0.59 1"/></material></visual>
+  </link>
+  <joint name="top_plate_fixed" type="fixed"><parent link="limo_base_link"/><child link="limo_top_plate"/><origin xyz="0 0 0.196" rpy="0 0 0"/></joint>
+</robot>
