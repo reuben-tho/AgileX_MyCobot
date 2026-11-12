@@ -1,5 +1,60 @@
 # AgileX LIMO + MyCobot 280 M5 — combined ROS 2 slider control
+Step 4 — Install the required dependencies
+Copy:
+sudo apt update
 
+sudo apt install -y \
+python3-pip \
+python3-colcon-common-extensions \
+ros-foxy-rviz2 \
+ros-foxy-joint-state-publisher-gui \
+ros-foxy-tf-transformations \
+ros-foxy-tf2-geometry-msgs \
+ros-foxy-rqt-robot-steering
+
+
+Install Python libraries:
+pip3 install --user transforms3d pymycobot packaging
+
+
+Step 5 — Apply the Foxy compatibility patch and build
+First, check the driver header:
+grep -n "tf2_geometry_msgs" \
+~/ros2_ws/src/limo_ros2/limo_base/include/limo_base/limo_driver.h
+
+
+If it shows tf2_geometry_msgs.hpp, run:
+sed -i 's/tf2_geometry_msgs.hpp/tf2_geometry_msgs.h/g' \
+~/ros2_ws/src/limo_ros2/limo_base/include/limo_base/limo_driver.h
+
+
+Now build:
+cd ~/ros2_ws
+
+source /opt/ros/foxy/setup.bash
+
+rm -rf build/limo_base install/limo_base
+
+colcon build --symlink-install \
+--packages-select limo_msgs limo_description limo_base
+
+
+This builds the main LIMO message, description and driver packages.
+
+Compatibility note: AgileX's currently published repository README describes Humble, so the Foxy patch above is based on your supplied setup notes, not a guarantee that every current upstream file supports Foxy. 
+GitHub
+
+Step 6 — Source and open RViz
+After a successful build:
+source ~/ros2_ws/install/setup.bash
+
+
+Now launch the LIMO model:
+ros2 launch limo_description display_models_diff.launch.py
+
+
+Expected result
+RViz should open and display the LIMO robot.
 This workspace package brings the mobile base and the 6-DOF arm into one RViz robot model. The same `joint_state_publisher_gui` slider window exposes nine controls:
 
 | Slider | Meaning | Units |
