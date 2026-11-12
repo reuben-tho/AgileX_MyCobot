@@ -1,5 +1,45 @@
 # AgileX_MyCobot
+Step 1 — Create your workspace
+Open your Ubuntu terminal and run:
+source /opt/ros/foxy/setup.bash
 
+mkdir -p ~/ros2_ws/src
+
+cd ~/ros2_ws
+
+
+Step 2 — Download the robot packages
+For the MyCobot:
+cd ~/ros2_ws/src
+
+git clone -b foxy --depth 1 --filter=blob:none --sparse \
+https://github.com/elephantrobotics/mycobot_ros2.git
+
+cd mycobot_ros2
+
+git sparse-checkout set mycobot_description
+
+
+For the LIMO:
+cd ~/ros2_ws/src
+
+git clone -b foxy --depth 1 \
+https://github.com/agilexrobotics/limo_ros2.git
+
+
+The LIMO driver may require the Foxy compatibility patch described in your original notes.
+Step 3 — Put my package into the workspace
+Extract the Foxy ZIP into:
+~/ros2_ws/src/
+
+
+Your folder structure should look like:
+ros2_ws/
+└── src/
+    ├── limo_mycobot_control/
+    ├── limo_ros2/
+    └── mycobot_ros2/
+        └── mycobot_description/
 How the controls work
 The package provides nine sliders in the ROS joint slider GUI, with the robot model displayed in RViz:
 Sliders	Function
